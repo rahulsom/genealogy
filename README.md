@@ -12,7 +12,7 @@ Usage
 ----
 
 ```java
-NameDbUsa instance = NameDbUsa();
+NameDbUsa instance = NameDbUsa.getInstance();
 String firstName = instance.getMaleName();
 String lastName = instance.getLastName();
 
