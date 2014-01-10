@@ -1,0 +1,12 @@
+language: java
+
+env:
+  global:
+    - secure: "fEulV4ATALHgUTV2pG2Cd/3CHxgFajBk+4q8y5nDavxaGK2rgeDH3b5cDV7sM1GKvKZuio6xYlMQB56AcI+mSlRKAo+WfUwqaNgnGrXNctlLZxaLfYjablK2vuQGKfDmjUstcBJmAbBY6UhP6BmmUshQSrJL4UMtmt4bMY7vusU="
+    - BINTRAY_USER=rahulsom
+
+script: ./build.sh
+
+cache:
+  directories:
+    - $HOME/.m2/repository
