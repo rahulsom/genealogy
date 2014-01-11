@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.rahulsom</groupId>
     <artifactId>genealogy</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <name>Genealogy</name>
     <description>Util to deal with genealogical data.</description>
@@ -25,7 +23,8 @@
         <url>https://github.com/rahulsom/genealogy.git</url>
         <connection>scm:git:git@github.com:rahulsom/genealogy.git</connection>
         <developerConnection>scm:git:git@github.com:rahulsom/genealogy.git</developerConnection>
-    </scm>
+      <tag>genealogy-1.0</tag>
+  </scm>
 
     <issueManagement>
         <system>GitHub</system>
