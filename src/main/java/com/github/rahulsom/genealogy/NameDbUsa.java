@@ -30,10 +30,20 @@ public class NameDbUsa {
             public void processLine(String line, long index) {
                 if (index > 0) {
                     String[] parts = line.split(",");
-                    lastNames.add(new Name(parts[0], Double.parseDouble(parts[4])));
+                    lastNames.add(new LastName(
+                            parts[0],
+                            Double.parseDouble(parts[4]),
+                            Double.parseDouble(parts[5]),
+                            Double.parseDouble(parts[6]),
+                            Double.parseDouble(parts[7]),
+                            Double.parseDouble(parts[8]),
+                            Double.parseDouble(parts[9]),
+                            Double.parseDouble(parts[10])
+                    ));
                 }
             }
         });
+
         processResource("dist.female.first", new AbstractProcessor() {
             @Override
             public void processLine(String line, long index) {
@@ -41,6 +51,7 @@ public class NameDbUsa {
                 femaleNames.add(new Name(parts[0], Double.parseDouble(parts[2])));
             }
         });
+
         processResource("dist.male.first", new AbstractProcessor() {
             @Override
             public void processLine(String line, long index) {
@@ -52,7 +63,7 @@ public class NameDbUsa {
 
     private List<Name> maleNames = new ArrayList<Name>();
     private List<Name> femaleNames = new ArrayList<Name>();
-    private List<Name> lastNames = new ArrayList<Name>();
+    private List<LastName> lastNames = new ArrayList<LastName>();
 
     private final SecureRandom random = new SecureRandom();
 
@@ -89,7 +100,7 @@ public class NameDbUsa {
      * @param list the list
      * @return the max cumulative probability
      */
-    private double getMax(List<Name> list) {
+    private double getMax(List<? extends Name> list) {
         return list.get(list.size() - 1).getCumulativeProbability();
     }
 
@@ -149,7 +160,7 @@ public class NameDbUsa {
      * @param probability the cumulative probability to search for
      * @return the name
      */
-    private String getName(List<Name> list, double probability) {
+    private String getName(List<? extends Name> list, double probability) {
         int index = Collections.binarySearch(list, new Name(null, probability), locateNameByCumulativeProbability);
         if (index >= 0) {
             return list.get(index).getValue();

@@ -11,16 +11,8 @@ public class Name {
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public double getCumulativeProbability() {
         return cumulativeProbability;
-    }
-
-    public void setCumulativeProbability(double cumulativeProbability) {
-        this.cumulativeProbability = cumulativeProbability;
     }
 
     public Name(String value, double cumulativeProbability) {
