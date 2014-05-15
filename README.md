@@ -24,7 +24,7 @@ System.out.println (welcome);
 If you want to download the library from Sonatype, add this to your dependencies
 section:
 
-    com.github.rahulsom:genealogy:1.0-SNAPSHOT
+    com.github.rahulsom:genealogy:1.1
 
 To browse the latest builds, you can see [MavenRepository](http://mvnrepository.com/artifact/com.github.rahulsom/genealogy). It also has instructions for Maven, Gradle, Ivy, sbt, etc.
 
