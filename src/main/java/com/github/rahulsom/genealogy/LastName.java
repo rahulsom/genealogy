@@ -1,7 +1,5 @@
 package com.github.rahulsom.genealogy;
 
-import java.util.*;
-
 /**
  * Represents a Lastname
  */
@@ -99,34 +97,23 @@ public class LastName extends Name {
     }
 
     public Race getRace(double raceProbability) {
-        LinkedHashMap<Race, Double> map = new LinkedHashMap<>(6);
-        map.put(Race.White, percentWhite);
-        map.put(Race.Black, percentBlack);
-        map.put(Race.AsianOrPacificIslander, percentAsianOrPacificIslander);
-        map.put(Race.AlaskanOrNativeAmerican, percentAlaskanOrNativeAmerican);
-        map.put(Race.MixedRace, percentMixedRace);
-        map.put(Race.Hispanic, percentHispanic);
-        List<Map.Entry<Race, Double>> entries =
-                new ArrayList<>(map.entrySet());
-        Collections.sort(entries, new Comparator<Map.Entry<Race, Double>>() {
-            public int compare(Map.Entry<Race, Double> a, Map.Entry<Race, Double> b){
-                return b.getValue().compareTo(a.getValue());
-            }
-        });
-        Map<Race, Double> sortedMap = new LinkedHashMap<>();
-        for (Map.Entry<Race, Double> entry : entries) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
+        Object[][] data = {
+                {Race.White, percentWhite},
+                {Race.Black, percentBlack},
+                {Race.AsianOrPacificIslander, percentAsianOrPacificIslander},
+                {Race.AlaskanOrNativeAmerican, percentAlaskanOrNativeAmerican},
+                {Race.MixedRace, percentMixedRace},
+                {Race.Hispanic, percentHispanic}
+        };
+        
         Double cumulative = 0.0d;
-
-        for (Map.Entry<Race, Double> entry : sortedMap.entrySet()) {
-            cumulative += entry.getValue();
+        for (Object[] entry : data) {
+            cumulative += (Double) entry[1];
             if (cumulative > raceProbability) {
-                return entry.getKey();
+                return (Race) entry[0];
             }
         }
-        Object[] objects = sortedMap.entrySet().toArray();
-        return ((Map.Entry<Race, Double>)objects[0]).getKey();
+        return (Race) data[0][0];
     }
 
 }
