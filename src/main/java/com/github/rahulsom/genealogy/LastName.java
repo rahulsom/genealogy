@@ -4,13 +4,13 @@ package com.github.rahulsom.genealogy;
  * Represents a Lastname
  */
 public class LastName extends Name {
-    private double percentWhite, percentBlack, percentAsianOrPacificIslander, percentAlaskanOrNativeAmerican,
+    private Double percentWhite, percentBlack, percentAsianOrPacificIslander, percentAlaskanOrNativeAmerican,
             percentMixedRace, percentHispanic;
 
     public LastName(
-            String value, double cumulativeProbability,
-            double percentWhite, double percentBlack, double percentAsianOrPacificIslander,
-            double percentAlaskanOrNativeAmerican, double percentMixedRace, double percentHispanic) {
+            String value, Double cumulativeProbability,
+            Double percentWhite, Double percentBlack, Double percentAsianOrPacificIslander,
+            Double percentAlaskanOrNativeAmerican, Double percentMixedRace, Double percentHispanic) {
         super(value, cumulativeProbability);
         this.percentWhite = percentWhite;
         this.percentBlack = percentBlack;
@@ -18,29 +18,102 @@ public class LastName extends Name {
         this.percentAlaskanOrNativeAmerican = percentAlaskanOrNativeAmerican;
         this.percentMixedRace = percentMixedRace;
         this.percentHispanic = percentHispanic;
+        double accountedRace = 0;
+        int unaccountedRaces = 0;
+        if (percentWhite == null) {
+            unaccountedRaces ++;
+        } else {
+            accountedRace += percentWhite;
+        }
+        if (percentBlack == null) {
+            unaccountedRaces ++;
+        } else {
+            accountedRace += percentBlack;
+        }
+        if (percentAsianOrPacificIslander == null) {
+            unaccountedRaces ++;
+        } else {
+            accountedRace += percentAsianOrPacificIslander;
+        }
+        if (percentAlaskanOrNativeAmerican == null) {
+            unaccountedRaces ++;
+        } else {
+            accountedRace += percentAlaskanOrNativeAmerican;
+        }
+        if (percentMixedRace == null) {
+            unaccountedRaces ++;
+        } else {
+            accountedRace += percentMixedRace;
+        }
+        if (percentHispanic == null) {
+            unaccountedRaces ++;
+        } else {
+            accountedRace += percentHispanic;
+        }
+
+        if (this.percentWhite == null) {
+            this.percentWhite = (100.0d - accountedRace)/unaccountedRaces;
+        }
+        if (this.percentBlack == null) {
+            this.percentBlack = (100.0d - accountedRace)/unaccountedRaces;
+        }
+        if (this.percentAsianOrPacificIslander == null) {
+            this.percentAsianOrPacificIslander = (100.0d - accountedRace)/unaccountedRaces;
+        }
+        if (this.percentAlaskanOrNativeAmerican == null) {
+            this.percentAlaskanOrNativeAmerican = (100.0d - accountedRace)/unaccountedRaces;
+        }
+        if (this.percentMixedRace == null) {
+            this.percentMixedRace = (100.0d - accountedRace)/unaccountedRaces;
+        }
+        if (this.percentHispanic == null) {
+            this.percentHispanic = (100.0d - accountedRace)/unaccountedRaces;
+        }
+        
     }
 
-    public double getPercentWhite() {
+    public Double getPercentWhite() {
         return percentWhite;
     }
 
-    public double getPercentBlack() {
+    public Double getPercentBlack() {
         return percentBlack;
     }
 
-    public double getPercentAsianOrPacificIslander() {
+    public Double getPercentAsianOrPacificIslander() {
         return percentAsianOrPacificIslander;
     }
 
-    public double getPercentAlaskanOrNativeAmerican() {
+    public Double getPercentAlaskanOrNativeAmerican() {
         return percentAlaskanOrNativeAmerican;
     }
 
-    public double getPercentMixedRace() {
+    public Double getPercentMixedRace() {
         return percentMixedRace;
     }
 
-    public double getPercentHispanic() {
+    public Double getPercentHispanic() {
         return percentHispanic;
     }
+
+    public Race getRace(double raceProbability) {
+        Object[][] data = {
+                {Race.White, percentWhite},
+                {Race.Black, percentBlack},
+                {Race.AsianOrPacificIslander, percentAsianOrPacificIslander},
+                {Race.AlaskanOrNativeAmerican, percentAlaskanOrNativeAmerican},
+                {Race.MixedRace, percentMixedRace},
+                {Race.Hispanic, percentHispanic}
+        };
+        
+        Double cumulative = 0.0d;
+        for (Object[] entry : data) {
+            cumulative += (Double) entry[1];
+            if (cumulative > raceProbability) {
+                return (Race) entry[0];
+            }
+        }
+        return (Race) data[0][0];
+    }
+
 }
