@@ -23,6 +23,10 @@ public class NameDbUsa {
     public static NameDbUsa getInstance() {
         return Holder.instance;
     }
+    
+    private static Double getDouble(String string) {
+        return string.matches("[0-9\\.]+") ? Double.valueOf(string) : null;
+    }
 
     private NameDbUsa() {
         processResource("last.csv", new AbstractProcessor() {
@@ -32,13 +36,13 @@ public class NameDbUsa {
                     String[] parts = line.split(",");
                     lastNames.add(new LastName(
                             parts[0],
-                            Double.parseDouble(parts[4]),
-                            Double.parseDouble(parts[5]),
-                            Double.parseDouble(parts[6]),
-                            Double.parseDouble(parts[7]),
-                            Double.parseDouble(parts[8]),
-                            Double.parseDouble(parts[9]),
-                            Double.parseDouble(parts[10])
+                            getDouble(parts[4]),
+                            getDouble(parts[5]),
+                            getDouble(parts[6]),
+                            getDouble(parts[7]),
+                            getDouble(parts[8]),
+                            getDouble(parts[9]),
+                            getDouble(parts[10])
                     ));
                 }
             }
@@ -161,18 +165,47 @@ public class NameDbUsa {
      * @return the name
      */
     private String getName(List<? extends Name> list, double probability) {
+        Name name = getNameObject(list, probability);
+        return name.getValue();
+    }
+
+    /**
+     * Finds name at a given cumulative probability accounting for gaps.
+     *
+     * @param list        The list to look for name in
+     * @param probability the cumulative probability to search for
+     * @return the name object
+     */
+    private Name getNameObject(List<? extends Name> list, double probability) {
         int index = Collections.binarySearch(list, new Name(null, probability), locateNameByCumulativeProbability);
         if (index >= 0) {
-            return list.get(index).getValue();
+            return list.get(index);
         } else if (-index > list.size()) {
             throw new RuntimeException("Invalid probability provided. Max allowed for this list is " + getMax(list));
         } else {
-            return list.get((-index) - 1).getValue();
+            return list.get((-index) - 1);
         }
     }
 
+    public Person getPerson() {
+        Person p = new Person();
+        if (random.nextBoolean()) {
+          p.gender = "M";
+          p.firstName = getMaleName();
+        } else {
+          p.gender = "F";
+          p.firstName = getFemaleName();
+        }
+        double probability = random.nextDouble() * getLastNameMax();
+        LastName nameObject = (LastName) getNameObject(lastNames, probability);
+
+        p.lastName = nameObject.getValue();
+        double raceProbability = random.nextDouble() * 100.0d;
+        p.race = nameObject.getRace(raceProbability);
+        return p;
+    }
+
     public static void main(String[] args) {
-        long start, finish;
         final NameDbUsa[] instance = new NameDbUsa[1];
         profile(new Task() {
             @Override
@@ -180,10 +213,6 @@ public class NameDbUsa {
                 instance[0] = NameDbUsa.getInstance();
             }
         }, "Time for init", 1);
-
-        System.out.println(instance[0].getLastNameMax());
-        System.out.println(instance[0].getFemaleNameMax());
-        System.out.println(instance[0].getMaleNameMax());
 
         profile(new Task() {
             @Override
@@ -209,6 +238,14 @@ public class NameDbUsa {
                 }
             }
         }, "Time for 1000000 last names", 3);
+        profile(new Task() {
+            @Override
+            void run() {
+                for (int i = 0; i < 1000000; i++) {
+                    instance[0].getPerson();
+                }
+            }
+        }, "Time for 1000000 persons", 3);
     }
 
     /**
