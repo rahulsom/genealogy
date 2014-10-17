@@ -4,6 +4,7 @@ package com.github.rahulsom.genealogy;
  * Represents a Lastname
  */
 public class LastName extends Name {
+    private static final double MAX_PROBABILITY = 1.0d;
     private Double percentWhite, percentBlack, percentAsianOrPacificIslander, percentAlaskanOrNativeAmerican,
             percentMixedRace, percentHispanic;
 
@@ -52,22 +53,22 @@ public class LastName extends Name {
         }
 
         if (this.percentWhite == null) {
-            this.percentWhite = (100.0d - accountedRace)/unaccountedRaces;
+            this.percentWhite = (MAX_PROBABILITY - accountedRace)/unaccountedRaces;
         }
         if (this.percentBlack == null) {
-            this.percentBlack = (100.0d - accountedRace)/unaccountedRaces;
+            this.percentBlack = (MAX_PROBABILITY - accountedRace)/unaccountedRaces;
         }
         if (this.percentAsianOrPacificIslander == null) {
-            this.percentAsianOrPacificIslander = (100.0d - accountedRace)/unaccountedRaces;
+            this.percentAsianOrPacificIslander = (MAX_PROBABILITY - accountedRace)/unaccountedRaces;
         }
         if (this.percentAlaskanOrNativeAmerican == null) {
-            this.percentAlaskanOrNativeAmerican = (100.0d - accountedRace)/unaccountedRaces;
+            this.percentAlaskanOrNativeAmerican = (MAX_PROBABILITY - accountedRace)/unaccountedRaces;
         }
         if (this.percentMixedRace == null) {
-            this.percentMixedRace = (100.0d - accountedRace)/unaccountedRaces;
+            this.percentMixedRace = (MAX_PROBABILITY - accountedRace)/unaccountedRaces;
         }
         if (this.percentHispanic == null) {
-            this.percentHispanic = (100.0d - accountedRace)/unaccountedRaces;
+            this.percentHispanic = (MAX_PROBABILITY - accountedRace)/unaccountedRaces;
         }
         
     }

@@ -6,10 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.SecureRandom;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Util to generate names based on US Census data
@@ -23,9 +20,13 @@ public class NameDbUsa {
     public static NameDbUsa getInstance() {
         return Holder.instance;
     }
-    
+
+    private static Double getDouble(String string, double divisor) {
+        return string.matches("[0-9\\.]+") ? Double.valueOf(string) / divisor : null;
+    }
+
     private static Double getDouble(String string) {
-        return string.matches("[0-9\\.]+") ? Double.valueOf(string) : null;
+        return getDouble(string, 1.0d);
     }
 
     private NameDbUsa() {
@@ -37,12 +38,12 @@ public class NameDbUsa {
                     lastNames.add(new LastName(
                             parts[0],
                             getDouble(parts[4]),
-                            getDouble(parts[5]),
-                            getDouble(parts[6]),
-                            getDouble(parts[7]),
-                            getDouble(parts[8]),
-                            getDouble(parts[9]),
-                            getDouble(parts[10])
+                            getDouble(parts[5], 100.0),
+                            getDouble(parts[6], 100.0),
+                            getDouble(parts[7], 100.0),
+                            getDouble(parts[8], 100.0),
+                            getDouble(parts[9], 100.0),
+                            getDouble(parts[10], 100.0)
                     ));
                 }
             }
@@ -69,7 +70,12 @@ public class NameDbUsa {
     private List<Name> femaleNames = new ArrayList<Name>();
     private List<LastName> lastNames = new ArrayList<LastName>();
 
-    private final SecureRandom random = new SecureRandom();
+    private final SecureRandom sRandom = new SecureRandom();
+    private final Random random = new Random(sRandom.nextLong());
+
+    public void reset() {
+        random.setSeed(sRandom.nextLong());
+    }
 
     /**
      * Think of eachLineWithIndex()
@@ -108,24 +114,12 @@ public class NameDbUsa {
         return list.get(list.size() - 1).getCumulativeProbability();
     }
 
-    public double getMaleNameMax() {
-        return getMax(maleNames);
-    }
-
-    public double getFemaleNameMax() {
-        return getMax(femaleNames);
-    }
-
-    public double getLastNameMax() {
-        return getMax(lastNames);
-    }
-
     public String getMaleName(double probability) {
         return getName(maleNames, probability);
     }
 
     public String getMaleName() {
-        double probability = random.nextDouble() * getMaleNameMax();
+        double probability = random.nextDouble();
         return getMaleName(probability);
     }
 
@@ -134,7 +128,7 @@ public class NameDbUsa {
     }
 
     public String getFemaleName() {
-        double probability = random.nextDouble() * getFemaleNameMax();
+        double probability = random.nextDouble();
         return getFemaleName(probability);
     }
 
@@ -143,7 +137,7 @@ public class NameDbUsa {
     }
 
     public String getLastName() {
-        double probability = random.nextDouble() * getLastNameMax();
+        double probability = random.nextDouble();
         return getLastName(probability);
     }
 
@@ -161,11 +155,11 @@ public class NameDbUsa {
      * Finds name at a given cumulative probability accounting for gaps.
      *
      * @param list        The list to look for name in
-     * @param probability the cumulative probability to search for
+     * @param probability the cumulative probability to search for (between 0 and 1)
      * @return the name
      */
     private String getName(List<? extends Name> list, double probability) {
-        Name name = getNameObject(list, probability);
+        Name name = getNameObject(list, probability * getMax(list));
         return name.getValue();
     }
 
@@ -173,7 +167,7 @@ public class NameDbUsa {
      * Finds name at a given cumulative probability accounting for gaps.
      *
      * @param list        The list to look for name in
-     * @param probability the cumulative probability to search for
+     * @param probability the cumulative probability to search for (between 0 and 1)
      * @return the name object
      */
     private Name getNameObject(List<? extends Name> list, double probability) {
@@ -181,26 +175,37 @@ public class NameDbUsa {
         if (index >= 0) {
             return list.get(index);
         } else if (-index > list.size()) {
-            throw new RuntimeException("Invalid probability provided. Max allowed for this list is " + getMax(list));
+            throw new RuntimeException("Invalid probability provided - (" + probability +
+                    "). Max allowed for this list is " + getMax(list));
         } else {
             return list.get((-index) - 1);
         }
     }
 
     public Person getPerson() {
+        return getPerson(random.nextLong());
+    }
+
+    private double getDoubleFromLong(long number, long divisor) {
+        double retval = Math.abs((number * 1.0d) / (divisor * 1.0d));
+        return retval - Math.floor(retval);
+    }
+
+    public Person getPerson(long number) {
+        double firstNameProbability = getDoubleFromLong(number, 66767676967l);
+        double lastNameProbability = getDoubleFromLong(number, 41935324l);
         Person p = new Person();
-        if (random.nextBoolean()) {
-          p.gender = "M";
-          p.firstName = getMaleName();
+        if (number > 0) {
+            p.gender = "M";
+            p.firstName = getMaleName(firstNameProbability);
         } else {
-          p.gender = "F";
-          p.firstName = getFemaleName();
+            p.gender = "F";
+            p.firstName = getFemaleName(firstNameProbability);
         }
-        double probability = random.nextDouble() * getLastNameMax();
-        LastName nameObject = (LastName) getNameObject(lastNames, probability);
+        LastName nameObject = (LastName) getNameObject(lastNames, lastNameProbability);
 
         p.lastName = nameObject.getValue();
-        double raceProbability = random.nextDouble() * 100.0d;
+        double raceProbability = getDoubleFromLong(number, 21321567657l);
         p.race = nameObject.getRace(raceProbability);
         return p;
     }
@@ -221,7 +226,7 @@ public class NameDbUsa {
                     instance[0].getMaleName();
                 }
             }
-        }, "Time for 1000000 males", 3);
+        }, "Time for 1000000 males", 5);
         profile(new Task() {
             @Override
             void run() {
@@ -229,7 +234,7 @@ public class NameDbUsa {
                     instance[0].getFemaleName();
                 }
             }
-        }, "Time for 1000000 females", 3);
+        }, "Time for 1000000 females", 5);
         profile(new Task() {
             @Override
             void run() {
@@ -237,7 +242,7 @@ public class NameDbUsa {
                     instance[0].getLastName();
                 }
             }
-        }, "Time for 1000000 last names", 3);
+        }, "Time for 1000000 last names", 5);
         profile(new Task() {
             @Override
             void run() {
@@ -245,7 +250,7 @@ public class NameDbUsa {
                     instance[0].getPerson();
                 }
             }
-        }, "Time for 1000000 persons", 3);
+        }, "Time for 1000000 persons", 5);
     }
 
     /**
@@ -262,13 +267,13 @@ public class NameDbUsa {
      * @param message message identifying the task
      * @param tries   number of times task needs to be executed
      */
-    static void profile(Task task, String message, int tries) {
+    private static void profile(Task task, String message, int tries) {
         for (int i = 0; i < tries; i++) {
             long start = System.nanoTime();
             task.run();
             long finish = System.nanoTime();
             System.out.println(
-                    MessageFormat.format("[Try {2}] {1}: {0}ms", (finish - start) / 1000000.0, message, i + 1)
+                    String.format("[Try %d] %-30s: %-5.2fms", i+1, message, (finish - start) / 1000000.0)
             );
         }
 
