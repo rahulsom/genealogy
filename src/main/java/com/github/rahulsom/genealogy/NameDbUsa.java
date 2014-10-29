@@ -1,101 +1,28 @@
 package com.github.rahulsom.genealogy;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.security.SecureRandom;
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Util to generate names based on US Census data
  */
 public class NameDbUsa {
 
-    private static class Holder {
-        public static final NameDbUsa instance = new NameDbUsa();
+    private final DataUtil dataUtil;
+
+    private final Random random;
+    private static final SecureRandom secureRandom = new SecureRandom();
+
+    public NameDbUsa(Random random) {
+        this.random = random;
+        dataUtil = DataUtil.getInstance();
     }
 
     public static NameDbUsa getInstance() {
-        return Holder.instance;
-    }
-    
-    private static Double getDouble(String string) {
-        return string.matches("[0-9\\.]+") ? Double.valueOf(string) : null;
-    }
-
-    private NameDbUsa() {
-        processResource("last.csv", new AbstractProcessor() {
-            @Override
-            public void processLine(String line, long index) {
-                if (index > 0) {
-                    String[] parts = line.split(",");
-                    lastNames.add(new LastName(
-                            parts[0],
-                            getDouble(parts[4]),
-                            getDouble(parts[5]),
-                            getDouble(parts[6]),
-                            getDouble(parts[7]),
-                            getDouble(parts[8]),
-                            getDouble(parts[9]),
-                            getDouble(parts[10])
-                    ));
-                }
-            }
-        });
-
-        processResource("dist.female.first", new AbstractProcessor() {
-            @Override
-            public void processLine(String line, long index) {
-                String[] parts = line.split(" +");
-                femaleNames.add(new Name(parts[0], Double.parseDouble(parts[2])));
-            }
-        });
-
-        processResource("dist.male.first", new AbstractProcessor() {
-            @Override
-            public void processLine(String line, long index) {
-                String[] parts = line.split(" +");
-                maleNames.add(new Name(parts[0], Double.parseDouble(parts[2])));
-            }
-        });
-    }
-
-    private List<Name> maleNames = new ArrayList<Name>();
-    private List<Name> femaleNames = new ArrayList<Name>();
-    private List<LastName> lastNames = new ArrayList<LastName>();
-
-    private final SecureRandom random = new SecureRandom();
-
-    /**
-     * Think of eachLineWithIndex()
-     */
-    private static abstract class AbstractProcessor {
-        public abstract void processLine(String line, long index);
-    }
-
-    /**
-     * Processes a given resource using provided closure
-     *
-     * @param resourceName resource to fetch from classpath
-     * @param processor    how to process the resource
-     */
-    private static void processResource(String resourceName, AbstractProcessor processor) {
-        InputStream lastNameStream = NameDbUsa.class.getClassLoader().getResourceAsStream(resourceName);
-        BufferedReader lastNameReader = new BufferedReader(new InputStreamReader(lastNameStream));
-        try {
-            int index = 0;
-            while (lastNameReader.ready()) {
-                String line = lastNameReader.readLine();
-                processor.processLine(line, index++);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return new NameDbUsa(new Random(new SecureRandom().nextLong()));
     }
 
     /**
@@ -108,42 +35,30 @@ public class NameDbUsa {
         return list.get(list.size() - 1).getCumulativeProbability();
     }
 
-    public double getMaleNameMax() {
-        return getMax(maleNames);
-    }
-
-    public double getFemaleNameMax() {
-        return getMax(femaleNames);
-    }
-
-    public double getLastNameMax() {
-        return getMax(lastNames);
-    }
-
     public String getMaleName(double probability) {
-        return getName(maleNames, probability);
+        return getName(dataUtil.getMaleNames(), probability);
     }
 
     public String getMaleName() {
-        double probability = random.nextDouble() * getMaleNameMax();
+        double probability = random.nextDouble();
         return getMaleName(probability);
     }
 
     public String getFemaleName(double probability) {
-        return getName(femaleNames, probability);
+        return getName(dataUtil.getFemaleNames(), probability);
     }
 
     public String getFemaleName() {
-        double probability = random.nextDouble() * getFemaleNameMax();
+        double probability = random.nextDouble();
         return getFemaleName(probability);
     }
 
     public String getLastName(double probability) {
-        return getName(lastNames, probability);
+        return getName(dataUtil.getLastNames(), probability);
     }
 
     public String getLastName() {
-        double probability = random.nextDouble() * getLastNameMax();
+        double probability = random.nextDouble();
         return getLastName(probability);
     }
 
@@ -161,11 +76,11 @@ public class NameDbUsa {
      * Finds name at a given cumulative probability accounting for gaps.
      *
      * @param list        The list to look for name in
-     * @param probability the cumulative probability to search for
+     * @param probability the cumulative probability to search for (between 0 and 1)
      * @return the name
      */
     private String getName(List<? extends Name> list, double probability) {
-        Name name = getNameObject(list, probability);
+        Name name = getNameObject(list, probability * getMax(list));
         return name.getValue();
     }
 
@@ -173,7 +88,7 @@ public class NameDbUsa {
      * Finds name at a given cumulative probability accounting for gaps.
      *
      * @param list        The list to look for name in
-     * @param probability the cumulative probability to search for
+     * @param probability the cumulative probability to search for (between 0 and 1)
      * @return the name object
      */
     private Name getNameObject(List<? extends Name> list, double probability) {
@@ -181,26 +96,37 @@ public class NameDbUsa {
         if (index >= 0) {
             return list.get(index);
         } else if (-index > list.size()) {
-            throw new RuntimeException("Invalid probability provided. Max allowed for this list is " + getMax(list));
+            throw new RuntimeException("Invalid probability provided - (" + probability +
+                    "). Max allowed for this list is " + getMax(list));
         } else {
             return list.get((-index) - 1);
         }
     }
 
     public Person getPerson() {
+        return getPerson(random.nextLong());
+    }
+
+    private double getDoubleFromLong(long number, long divisor) {
+        double retval = Math.abs((number * 1.0d) / (divisor * 1.0d));
+        return retval - Math.floor(retval);
+    }
+
+    public Person getPerson(long number) {
+        double firstNameProbability = getDoubleFromLong(number, 66767676967l);
+        double lastNameProbability = getDoubleFromLong(number, 41935324l);
         Person p = new Person();
-        if (random.nextBoolean()) {
-          p.gender = "M";
-          p.firstName = getMaleName();
+        if (number > 0) {
+            p.gender = "M";
+            p.firstName = getMaleName(firstNameProbability);
         } else {
-          p.gender = "F";
-          p.firstName = getFemaleName();
+            p.gender = "F";
+            p.firstName = getFemaleName(firstNameProbability);
         }
-        double probability = random.nextDouble() * getLastNameMax();
-        LastName nameObject = (LastName) getNameObject(lastNames, probability);
+        LastName nameObject = (LastName) getNameObject(dataUtil.getLastNames(), lastNameProbability);
 
         p.lastName = nameObject.getValue();
-        double raceProbability = random.nextDouble() * 100.0d;
+        double raceProbability = getDoubleFromLong(number, 21321567657l);
         p.race = nameObject.getRace(raceProbability);
         return p;
     }
@@ -221,7 +147,7 @@ public class NameDbUsa {
                     instance[0].getMaleName();
                 }
             }
-        }, "Time for 1000000 males", 3);
+        }, "Time for 1000000 males", 5);
         profile(new Task() {
             @Override
             void run() {
@@ -229,7 +155,7 @@ public class NameDbUsa {
                     instance[0].getFemaleName();
                 }
             }
-        }, "Time for 1000000 females", 3);
+        }, "Time for 1000000 females", 5);
         profile(new Task() {
             @Override
             void run() {
@@ -237,7 +163,7 @@ public class NameDbUsa {
                     instance[0].getLastName();
                 }
             }
-        }, "Time for 1000000 last names", 3);
+        }, "Time for 1000000 last names", 5);
         profile(new Task() {
             @Override
             void run() {
@@ -245,7 +171,7 @@ public class NameDbUsa {
                     instance[0].getPerson();
                 }
             }
-        }, "Time for 1000000 persons", 3);
+        }, "Time for 1000000 persons", 5);
     }
 
     /**
@@ -262,13 +188,13 @@ public class NameDbUsa {
      * @param message message identifying the task
      * @param tries   number of times task needs to be executed
      */
-    static void profile(Task task, String message, int tries) {
+    private static void profile(Task task, String message, int tries) {
         for (int i = 0; i < tries; i++) {
             long start = System.nanoTime();
             task.run();
             long finish = System.nanoTime();
             System.out.println(
-                    MessageFormat.format("[Try {2}] {1}: {0}ms", (finish - start) / 1000000.0, message, i + 1)
+                    String.format("[Try %d] %-30s: %-5.2fms", i + 1, message, (finish - start) / 1000000.0)
             );
         }
 

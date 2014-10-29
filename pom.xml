@@ -5,7 +5,7 @@
 
   <groupId>com.github.rahulsom</groupId>
   <artifactId>genealogy</artifactId>
-  <version>1.1</version>
+  <version>1.2</version>
 
   <name>Genealogy</name>
   <description>Util to deal with genealogical data.</description>
