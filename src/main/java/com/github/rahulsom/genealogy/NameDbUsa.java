@@ -1,107 +1,28 @@
 package com.github.rahulsom.genealogy;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.security.SecureRandom;
-import java.text.MessageFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Util to generate names based on US Census data
  */
 public class NameDbUsa {
 
-    private static class Holder {
-        public static final NameDbUsa instance = new NameDbUsa();
+    private final DataUtil dataUtil;
+
+    private final Random random;
+    private static final SecureRandom secureRandom = new SecureRandom();
+
+    public NameDbUsa(Random random) {
+        this.random = random;
+        dataUtil = DataUtil.getInstance();
     }
 
     public static NameDbUsa getInstance() {
-        return Holder.instance;
-    }
-
-    private static Double getDouble(String string, double divisor) {
-        return string.matches("[0-9\\.]+") ? Double.valueOf(string) / divisor : null;
-    }
-
-    private static Double getDouble(String string) {
-        return getDouble(string, 1.0d);
-    }
-
-    private NameDbUsa() {
-        processResource("last.csv", new AbstractProcessor() {
-            @Override
-            public void processLine(String line, long index) {
-                if (index > 0) {
-                    String[] parts = line.split(",");
-                    lastNames.add(new LastName(
-                            parts[0],
-                            getDouble(parts[4]),
-                            getDouble(parts[5], 100.0),
-                            getDouble(parts[6], 100.0),
-                            getDouble(parts[7], 100.0),
-                            getDouble(parts[8], 100.0),
-                            getDouble(parts[9], 100.0),
-                            getDouble(parts[10], 100.0)
-                    ));
-                }
-            }
-        });
-
-        processResource("dist.female.first", new AbstractProcessor() {
-            @Override
-            public void processLine(String line, long index) {
-                String[] parts = line.split(" +");
-                femaleNames.add(new Name(parts[0], Double.parseDouble(parts[2])));
-            }
-        });
-
-        processResource("dist.male.first", new AbstractProcessor() {
-            @Override
-            public void processLine(String line, long index) {
-                String[] parts = line.split(" +");
-                maleNames.add(new Name(parts[0], Double.parseDouble(parts[2])));
-            }
-        });
-    }
-
-    private List<Name> maleNames = new ArrayList<Name>();
-    private List<Name> femaleNames = new ArrayList<Name>();
-    private List<LastName> lastNames = new ArrayList<LastName>();
-
-    private final SecureRandom sRandom = new SecureRandom();
-    private final Random random = new Random(sRandom.nextLong());
-
-    public void reset() {
-        random.setSeed(sRandom.nextLong());
-    }
-
-    /**
-     * Think of eachLineWithIndex()
-     */
-    private static abstract class AbstractProcessor {
-        public abstract void processLine(String line, long index);
-    }
-
-    /**
-     * Processes a given resource using provided closure
-     *
-     * @param resourceName resource to fetch from classpath
-     * @param processor    how to process the resource
-     */
-    private static void processResource(String resourceName, AbstractProcessor processor) {
-        InputStream lastNameStream = NameDbUsa.class.getClassLoader().getResourceAsStream(resourceName);
-        BufferedReader lastNameReader = new BufferedReader(new InputStreamReader(lastNameStream));
-        try {
-            int index = 0;
-            while (lastNameReader.ready()) {
-                String line = lastNameReader.readLine();
-                processor.processLine(line, index++);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return new NameDbUsa(new Random(new SecureRandom().nextLong()));
     }
 
     /**
@@ -115,7 +36,7 @@ public class NameDbUsa {
     }
 
     public String getMaleName(double probability) {
-        return getName(maleNames, probability);
+        return getName(dataUtil.getMaleNames(), probability);
     }
 
     public String getMaleName() {
@@ -124,7 +45,7 @@ public class NameDbUsa {
     }
 
     public String getFemaleName(double probability) {
-        return getName(femaleNames, probability);
+        return getName(dataUtil.getFemaleNames(), probability);
     }
 
     public String getFemaleName() {
@@ -133,7 +54,7 @@ public class NameDbUsa {
     }
 
     public String getLastName(double probability) {
-        return getName(lastNames, probability);
+        return getName(dataUtil.getLastNames(), probability);
     }
 
     public String getLastName() {
@@ -202,7 +123,7 @@ public class NameDbUsa {
             p.gender = "F";
             p.firstName = getFemaleName(firstNameProbability);
         }
-        LastName nameObject = (LastName) getNameObject(lastNames, lastNameProbability);
+        LastName nameObject = (LastName) getNameObject(dataUtil.getLastNames(), lastNameProbability);
 
         p.lastName = nameObject.getValue();
         double raceProbability = getDoubleFromLong(number, 21321567657l);
@@ -273,7 +194,7 @@ public class NameDbUsa {
             task.run();
             long finish = System.nanoTime();
             System.out.println(
-                    String.format("[Try %d] %-30s: %-5.2fms", i+1, message, (finish - start) / 1000000.0)
+                    String.format("[Try %d] %-30s: %-5.2fms", i + 1, message, (finish - start) / 1000000.0)
             );
         }
 
