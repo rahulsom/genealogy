@@ -34,10 +34,16 @@ String description = person.getFirstName() + " " +
 System.out.println (description);
 ```
 
+If you want consistent names, this is an option
+```java
+long l = 42;
+Person person = instance.getPerson(l);
+```
+
 If you want to download the library from Sonatype, add this to your dependencies
 section:
 
-    com.github.rahulsom:genealogy:1.1
+    com.github.rahulsom:genealogy:1.3
 
 To browse the latest builds, you can see [MavenRepository](http://mvnrepository.com/artifact/com.github.rahulsom/genealogy). It also has instructions for Maven, Gradle, Ivy, sbt, etc.
 
