@@ -63,3 +63,5 @@ This project is being built on travis. See
 It gets automatically deployed to [Sonatype OSS](https://oss.sonatype.org/).
 
 [![Build Status](https://travis-ci.org/rahulsom/genealogy.png)](https://travis-ci.org/rahulsom/genealogy)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=rahulsom/genealogy)](https://dependabot.com)
+
