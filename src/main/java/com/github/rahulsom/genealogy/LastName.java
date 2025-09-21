@@ -1,15 +1,15 @@
 package com.github.rahulsom.genealogy;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.Objects;
 
 /**
  * Represents a Lastname
  */
 @Getter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class LastName extends Name {
     private static final double MAX_PROBABILITY = 1.0d;
     /**
@@ -144,24 +144,5 @@ public class LastName extends Name {
             }
         }
         return (Race) data[0][0];
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        LastName lastName = (LastName) o;
-        return Objects.equals(percentWhite, lastName.percentWhite) &&
-                Objects.equals(percentBlack, lastName.percentBlack) &&
-                Objects.equals(percentAsianOrPacificIslander, lastName.percentAsianOrPacificIslander) &&
-                Objects.equals(percentAlaskanOrNativeAmerican, lastName.percentAlaskanOrNativeAmerican) &&
-                Objects.equals(percentMixedRace, lastName.percentMixedRace) &&
-                Objects.equals(percentHispanic, lastName.percentHispanic);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), percentWhite, percentBlack, percentAsianOrPacificIslander, percentAlaskanOrNativeAmerican, percentMixedRace, percentHispanic);
     }
 }
