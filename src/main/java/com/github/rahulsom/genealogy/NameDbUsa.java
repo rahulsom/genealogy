@@ -190,9 +190,7 @@ public class NameDbUsa {
             long start = System.nanoTime();
             task.run();
             long finish = System.nanoTime();
-            System.out.println(
-                    String.format("[Try %d] %-30s: %-5.2fms", i + 1, message, (finish - start) / 1000000.0)
-            );
+            System.out.printf("[Try %d] %-30s: %-5.2fms%n", i + 1, message, (finish - start) / 1000000.0);
         }
 
     }
