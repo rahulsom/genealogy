@@ -1,5 +1,7 @@
 package com.github.rahulsom.genealogy;
 
+import lombok.Getter;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +12,7 @@ import java.util.List;
 /**
  * Singleton that stores data so multiple instances of NameDbUsa can be created.
  */
+@Getter
 public class DataUtil {
 
     static class Holder {
@@ -20,23 +23,11 @@ public class DataUtil {
         return Holder.instance;
     }
 
-    private List<Name> maleNames = new ArrayList<Name>();
-    private List<Name> femaleNames = new ArrayList<Name>();
-    private List<LastName> lastNames = new ArrayList<LastName>();
+    private final List<Name> maleNames = new ArrayList<>();
+    private final List<Name> femaleNames = new ArrayList<>();
+    private final List<LastName> lastNames = new ArrayList<>();
 
-    public List<Name> getMaleNames() {
-        return maleNames;
-    }
-
-    public List<Name> getFemaleNames() {
-        return femaleNames;
-    }
-
-    public List<LastName> getLastNames() {
-        return lastNames;
-    }
-
-    private DataUtil() {
+  private DataUtil() {
         processResource("last.csv", new AbstractProcessor() {
             @Override
             public void processLine(String line, long index) {
@@ -74,7 +65,7 @@ public class DataUtil {
     }
 
     private static Double getDouble(String string, double divisor) {
-        return string.matches("[0-9\\.]+") ? Double.valueOf(string) / divisor : null;
+        return string.matches("[0-9.]+") ? Double.parseDouble(string) / divisor : null;
     }
 
     private static Double getDouble(String string) {
