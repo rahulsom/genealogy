@@ -23,8 +23,8 @@ dependencies {
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.13.4")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.4")
 
-  testImplementation("org.mockito:mockito-core:5.12.0")
-  testImplementation("org.mockito:mockito-junit-jupiter:5.12.0")
+  testImplementation("org.mockito:mockito-core:5.20.0")
+  testImplementation("org.mockito:mockito-junit-jupiter:5.20.0")
 }
 spotless {
   java {
