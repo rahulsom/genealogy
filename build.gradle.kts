@@ -1,5 +1,5 @@
 plugins {
-  `java-library`
+  id("java-library")
   id("com.github.rahulsom.waena.root").version("0.18.1")
   id("com.github.rahulsom.waena.published").version("0.18.1")
   id("com.diffplug.spotless").version("7.2.1")
@@ -46,4 +46,8 @@ spotless {
 
 tasks.withType<Test> {
   useJUnitPlatform()
+}
+
+testlogger {
+  theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA
 }
