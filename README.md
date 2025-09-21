@@ -1,18 +1,16 @@
-Genealogy
-====
+# Genealogy
 
 Java library to generate names for people based on distributions inferred from US Census data for 1990 and 2000.
 
-Sources
-----
+## Sources
 
 The first names are gathered from the 1990 census. The last names are gathered from the 2000 census.
 
-Usage
-----
+## Usage
 
 This is the old API, low level but (slightly) faster.
 It has no support for race.
+
 ```java
 NameDbUsa instance = NameDbUsa.getInstance();
 String firstName = instance.getMaleName();
@@ -24,6 +22,7 @@ System.out.println (welcome);
 ```
 
 This is the new API, high level but with great support for race.
+
 ```java
 NameDbUsa instance = NameDbUsa.getInstance();
 Person person = instance.getPerson();
@@ -35,6 +34,7 @@ System.out.println (description);
 ```
 
 If you want consistent names, this is an option
+
 ```java
 long l = 42;
 Person person = instance.getPerson(l);
@@ -54,4 +54,3 @@ And add this to your repositories section:
 You can browse latest snapshots on:
 
     http://oss.sonatype.org/content/repositories/snapshots/com/github/rahulsom/genealogy/
-
