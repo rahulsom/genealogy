@@ -64,6 +64,6 @@ Person person = instance.getPerson(l);
 ----
 dependencies {
     // ...
-    compile 'com.github.rahulsom:genealogy:<VERSION>'
+    implementation 'com.github.rahulsom:genealogy:<VERSION>'
 }
 ----
