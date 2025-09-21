@@ -55,13 +55,3 @@ You can browse latest snapshots on:
 
     http://oss.sonatype.org/content/repositories/snapshots/com/github/rahulsom/genealogy/
 
-Builds
-------
-
-This project is being built on travis. See
-[https://travis-ci.org/rahulsom/genealogy](https://travis-ci.org/rahulsom/genealogy)
-It gets automatically deployed to [Sonatype OSS](https://oss.sonatype.org/).
-
-[![Build Status](https://travis-ci.org/rahulsom/genealogy.png)](https://travis-ci.org/rahulsom/genealogy)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=rahulsom/genealogy)](https://dependabot.com)
-
