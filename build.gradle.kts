@@ -13,8 +13,8 @@ group = "com.github.rahulsom"
 description = "Genealogy"
 
 dependencies {
-  annotationProcessor("org.projectlombok:lombok:1.18.30")
-  compileOnly("org.projectlombok:lombok:1.18.30")
+  annotationProcessor("org.projectlombok:lombok:1.18.42")
+  compileOnly("org.projectlombok:lombok:1.18.42")
 }
 spotless {
   java {
