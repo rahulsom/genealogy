@@ -104,8 +104,7 @@ public class NameDbUsa {
 
     private double getDoubleFromLong(long number, long divisor) {
         double remainder = Math.abs((number * 1.0d) / (divisor * 1.0d));
-		double retval = remainder - Math.floor(remainder);
-		return retval;
+        return remainder - Math.floor(remainder);
     }
 
     public Person getPerson(long number) {
