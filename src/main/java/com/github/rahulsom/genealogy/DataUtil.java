@@ -23,8 +23,20 @@ public class DataUtil {
         return Holder.instance;
     }
 
+    /**
+     * A list of male names.
+     * @return a list of male names
+     */
     private final List<Name> maleNames = new ArrayList<>();
+    /**
+     * A list of female names.
+     * @return a list of female names
+     */
     private final List<Name> femaleNames = new ArrayList<>();
+    /**
+     * A list of last names.
+     * @return a list of last names
+     */
     private final List<LastName> lastNames = new ArrayList<>();
 
   private DataUtil() {
