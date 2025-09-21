@@ -65,12 +65,7 @@ public class NameDbUsa {
     /**
      * Comparator to find the name at a given cumulative probability
      */
-    private final Comparator<Name> locateNameByCumulativeProbability = new Comparator<Name>() {
-        @Override
-        public int compare(Name o1, Name o2) {
-            return Double.compare(o1.getCumulativeProbability(), o2.getCumulativeProbability());
-        }
-    };
+    private final Comparator<Name> locateNameByCumulativeProbability = Comparator.comparingDouble(Name::getCumulativeProbability);
 
     /**
      * Finds name at a given cumulative probability accounting for gaps.
