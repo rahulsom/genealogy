@@ -32,7 +32,7 @@ public class NameDbUsa {
      * @return the max cumulative probability
      */
     private double getMax(List<? extends Name> list) {
-        return list.get(list.size() - 1).getCumulativeProbability();
+        return list.getLast().getCumulativeProbability();
     }
 
     public String getMaleName(double probability) {

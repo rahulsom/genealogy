@@ -11,6 +11,8 @@ on:
 jobs:
   build:
     uses: rahulsom/_/.github/workflows/gradle.yml@main
+    with:
+      java-version: 21
     secrets:
       DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
       ORG_GRADLE_PROJECT_SONATYPEUSERNAME: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPEUSERNAME }}
