@@ -87,6 +87,9 @@ public class DataUtil {
      */
     private static void processResource(String resourceName, AbstractProcessor processor) {
         InputStream lastNameStream = NameDbUsa.class.getClassLoader().getResourceAsStream(resourceName);
+        if (lastNameStream == null) {
+            throw new RuntimeException("Could not find resource " + resourceName);
+        }
         BufferedReader lastNameReader = new BufferedReader(new InputStreamReader(lastNameStream));
         try {
             int index = 0;
@@ -95,7 +98,7 @@ public class DataUtil {
                 processor.processLine(line, index++);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Could not load resource " + resourceName, e);
         }
     }
 }
