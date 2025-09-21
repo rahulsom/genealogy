@@ -114,7 +114,7 @@ public class NameDbUsa {
     }
 
     public Person getPerson(long number) {
-		double firstNameProbability = getDoubleFromLong(number, 66767676967l);
+		double firstNameProbability = getDoubleFromLong(number, 66767676967L);
         Person p = new Person();
         if (number > 0) {
             p.gender = "M";
@@ -123,12 +123,12 @@ public class NameDbUsa {
             p.gender = "F";
             p.firstName = getFemaleName(firstNameProbability);
         }
-		double lastNameProbability = getDoubleFromLong(number, 41935324l);
+		double lastNameProbability = getDoubleFromLong(number, 41935324L);
         LastName nameObject = (LastName) getNameObject(dataUtil.getLastNames(),
 				lastNameProbability * getMax(dataUtil.getLastNames()));
 
         p.lastName = nameObject.getValue();
-		double raceProbability = getDoubleFromLong(number, 21321567657l);
+		double raceProbability = getDoubleFromLong(number, 21321567657L);
         p.race = nameObject.getRace(raceProbability);
         return p;
     }
