@@ -12,7 +12,7 @@ public class NameDbUsa {
   private final DataUtil dataUtil;
 
   private final Random random;
-  private static final SecureRandom secureRandom = new SecureRandom();
+  private static final Random secureRandom = new SecureRandom();
 
   /**
    * Creates an instance of NameDbUsa.
@@ -165,13 +165,13 @@ public class NameDbUsa {
    */
   public Person getPerson(long number) {
     double firstNameProbability = getDoubleFromLong(number, 66767676967L);
-    Person p = new Person();
+    var p = Person.builder();
     if (number > 0) {
-      p.gender = "M";
-      p.firstName = getMaleName(firstNameProbability);
+      p.gender("M");
+      p.firstName(getMaleName(firstNameProbability));
     } else {
-      p.gender = "F";
-      p.firstName = getFemaleName(firstNameProbability);
+      p.gender("F");
+      p.firstName(getFemaleName(firstNameProbability));
     }
     double lastNameProbability = getDoubleFromLong(number, 41935324L);
     LastName nameObject =
@@ -179,10 +179,10 @@ public class NameDbUsa {
             getNameObject(
                 dataUtil.getLastNames(), lastNameProbability * getMax(dataUtil.getLastNames()));
 
-    p.lastName = nameObject.getValue();
+    p.lastName(nameObject.getValue());
     double raceProbability = getDoubleFromLong(number, 21321567657L);
-    p.race = nameObject.getRace(raceProbability);
-    return p;
+    p.race(nameObject.getRace(raceProbability));
+    return p.build();
   }
 
   /**
