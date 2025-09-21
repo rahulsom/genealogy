@@ -16,11 +16,21 @@ public class NameDbUsa {
     private final Random random;
     private static final SecureRandom secureRandom = new SecureRandom();
 
+    /**
+     * Creates an instance of NameDbUsa.
+     *
+     * @param random A random number generator.
+     */
     public NameDbUsa(Random random) {
         this.random = random;
         dataUtil = DataUtil.getInstance();
     }
 
+    /**
+     * Gets an instance of NameDbUsa.
+     *
+     * @return An instance of NameDbUsa.
+     */
     public static NameDbUsa getInstance() {
         return new NameDbUsa(new Random(new SecureRandom().nextLong()));
     }
@@ -35,28 +45,55 @@ public class NameDbUsa {
         return list.getLast().getCumulativeProbability();
     }
 
+    /**
+     * Gets a male name for a given probability.
+     * @param probability the probability
+     * @return the male name
+     */
     public String getMaleName(double probability) {
         return getName(dataUtil.getMaleNames(), probability);
     }
 
+    /**
+     * Gets a random male name.
+     * @return the male name
+     */
     public String getMaleName() {
         double probability = random.nextDouble();
         return getMaleName(probability);
     }
 
+    /**
+     * Gets a female name for a given probability.
+     * @param probability the probability
+     * @return the female name
+     */
     public String getFemaleName(double probability) {
         return getName(dataUtil.getFemaleNames(), probability);
     }
 
+    /**
+     * Gets a random female name.
+     * @return the female name
+     */
     public String getFemaleName() {
         double probability = random.nextDouble();
         return getFemaleName(probability);
     }
 
+    /**
+     * Gets a last name for a given probability.
+     * @param probability the probability
+     * @return the last name
+     */
     public String getLastName(double probability) {
         return getName(dataUtil.getLastNames(), probability);
     }
 
+    /**
+     * Gets a random last name.
+     * @return the last name
+     */
     public String getLastName() {
         double probability = random.nextDouble();
         return getLastName(probability);
@@ -98,6 +135,10 @@ public class NameDbUsa {
         }
     }
 
+    /**
+     * Gets a random person.
+     * @return a random person
+     */
     public Person getPerson() {
         return getPerson(random.nextLong());
     }
@@ -107,6 +148,11 @@ public class NameDbUsa {
         return remainder - Math.floor(remainder);
     }
 
+    /**
+     * Gets a person for a given number.
+     * @param number the number
+     * @return the person
+     */
     public Person getPerson(long number) {
 		double firstNameProbability = getDoubleFromLong(number, 66767676967L);
         Person p = new Person();
@@ -127,6 +173,11 @@ public class NameDbUsa {
         return p;
     }
 
+    /**
+     * The main method.
+     *
+     * @param args The arguments.
+     */
     public static void main(String[] args) {
         final NameDbUsa[] instance = new NameDbUsa[1];
         profile(new Task() {
