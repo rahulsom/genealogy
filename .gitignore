@@ -1,4 +1,29 @@
-target
+### Gradle template
+.gradle
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+
+### JetBrains template
 *.iml
-pom.xml.asc
-.idea
+.idea/
+*.ipr
+*.iws
+out/
+.idea_modules/
+
+### Eclipse template
+/bin/
+/*/bin
+/examples/*/bin/
+/examples/*/*/bin/
+.settings
+.classpath
+.project
+
+### Visual Studio Code
+*.code-workspace
+
+### Other stuff
+.gradletasknamecache
+.pid.lock
