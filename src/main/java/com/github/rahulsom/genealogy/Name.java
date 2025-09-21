@@ -1,27 +1,15 @@
 package com.github.rahulsom.genealogy;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /** Represents any kind of name */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public class Name {
-  /**
-   * The name.
-   *
-   * @param value the value
-   * @return the value
-   */
-  private String value;
+  /** The name. */
+  private final String value;
 
-  /**
-   * The cumulative probability of the name.
-   *
-   * @param cumulativeProbability the cumulative probability
-   * @return the cumulative probability
-   */
-  private double cumulativeProbability;
+  /** The cumulative probability of the name. */
+  private final double cumulativeProbability;
 }

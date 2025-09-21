@@ -11,46 +11,22 @@ import lombok.ToString;
 public class LastName extends Name {
   private static final double MAX_PROBABILITY = 1.0d;
 
-  /**
-   * The percentage of people with this last name who are white.
-   *
-   * @return The percentage of people with this last name who are white.
-   */
+  /** The percentage of people with this last name who are white. */
   private Double percentWhite;
 
-  /**
-   * The percentage of people with this last name who are black.
-   *
-   * @return The percentage of people with this last name who are black.
-   */
+  /** The percentage of people with this last name who are black. */
   private Double percentBlack;
 
-  /**
-   * The percentage of people with this last name who are Asian or Pacific Islander.
-   *
-   * @return The percentage of people with this last name who are Asian or Pacific Islander.
-   */
+  /** The percentage of people with this last name who are Asian or Pacific Islander. */
   private Double percentAsianOrPacificIslander;
 
-  /**
-   * The percentage of people with this last name who are Alaskan or Native American.
-   *
-   * @return The percentage of people with this last name who are Alaskan or Native American.
-   */
+  /** The percentage of people with this last name who are Alaskan or Native American. */
   private Double percentAlaskanOrNativeAmerican;
 
-  /**
-   * The percentage of people with this last name who are of mixed race.
-   *
-   * @return The percentage of people with this last name who are of mixed race.
-   */
+  /** The percentage of people with this last name who are of mixed race. */
   private Double percentMixedRace;
 
-  /**
-   * The percentage of people with this last name who are Hispanic.
-   *
-   * @return The percentage of people with this last name who are Hispanic.
-   */
+  /** The percentage of people with this last name who are Hispanic. */
   private Double percentHispanic;
 
   /**
