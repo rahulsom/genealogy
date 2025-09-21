@@ -1,8 +1,15 @@
 package com.github.rahulsom.genealogy;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
 /**
  * Represents a Lastname
  */
+@Getter
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class LastName extends Name {
     private static final double MAX_PROBABILITY = 1.0d;
     private Double percentWhite, percentBlack, percentAsianOrPacificIslander, percentAlaskanOrNativeAmerican,
@@ -71,30 +78,6 @@ public class LastName extends Name {
             this.percentHispanic = (MAX_PROBABILITY - accountedRace)/unaccountedRaces;
         }
         
-    }
-
-    public Double getPercentWhite() {
-        return percentWhite;
-    }
-
-    public Double getPercentBlack() {
-        return percentBlack;
-    }
-
-    public Double getPercentAsianOrPacificIslander() {
-        return percentAsianOrPacificIslander;
-    }
-
-    public Double getPercentAlaskanOrNativeAmerican() {
-        return percentAlaskanOrNativeAmerican;
-    }
-
-    public Double getPercentMixedRace() {
-        return percentMixedRace;
-    }
-
-    public Double getPercentHispanic() {
-        return percentHispanic;
     }
 
     public Race getRace(double raceProbability) {
