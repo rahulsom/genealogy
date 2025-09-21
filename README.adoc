@@ -1,6 +1,18 @@
 = Genealogy
+:package: com.github.rahulsom
+:package-path: com/github/rahulsom
+:package-path-encoded: com%2Fgithub%2Frahulsom
+:snapshot-prefix: image:https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fcentral.sonatype.com%2Frepository%2Fmaven-snapshots%2F{package-path-encoded}%2F
+:snapshot-middle: %2Fmaven-metadata.xml&style=for-the-badge&label=S[alt=Maven Snapshot,height=30,link="https://central.sonatype.com/repository/maven-snapshots/{package-path}/
+:snapshot-suffix: /maven-metadata.xml"]
+:central-prefix: image:https://img.shields.io/maven-central/v/{package}/
+:central-middle: ?style=for-the-badge&label=R&color=green[alt=Maven Central Version,height=30,link="https://central.sonatype.com/artifact/{package}/
+:central-suffix: /overview"]
+:deprecated-middle: ?style=for-the-badge&label=R&color=lightgrey[alt=Maven Central Version,height=30,link="https://central.sonatype.com/artifact/{package}/
 
 Java library to generate names for people based on distributions inferred from US Census data for 1990 and 2000.
+
+image:https://img.shields.io/github/commits-since/rahulsom/genealogy/latest?style=for-the-badge[GitHub commits since latest release, link="https://github.com/rahulsom/genealogy/releases/new"]
 
 == Sources
 
@@ -43,23 +55,15 @@ long l = 42;
 Person person = instance.getPerson(l);
 ----
 
-If you want to download the library from Sonatype, add this to your dependencies
-section:
+=== Available versions
 
-[source,groovy]
+{central-prefix}genealogy{central-middle}genealogy{central-suffix}
+{snapshot-prefix}genealogy{snapshot-middle}genealogy{snapshot-suffix}
+
+[source,gradle]
 ----
-com.github.rahulsom:genealogy:1.3
+dependencies {
+    // ...
+    compile 'com.github.rahulsom:genealogy:<VERSION>'
+}
 ----
-
-To browse the latest builds, you can see http://mvnrepository.com/artifact/com.github.rahulsom/genealogy[MavenRepository]. It also has instructions for Maven, Gradle, Ivy, sbt, etc.
-
-And add this to your repositories section:
-
-[source,groovy]
-----
-https://oss.sonatype.org/content/groups/public
-----
-
-You can browse latest snapshots on:
-
-http://oss.sonatype.org/content/repositories/snapshots/com/github/rahulsom/genealogy/
