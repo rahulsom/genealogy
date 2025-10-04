@@ -16,7 +16,7 @@ class NameDbUsaTest {
   void getMaleNameRunsFast() {
     var nameDbUsa = NameDbUsa.getInstance();
     long start = System.nanoTime();
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 1_000_000; i++) {
       nameDbUsa.getMaleName();
     }
     long end = System.nanoTime();
@@ -27,7 +27,7 @@ class NameDbUsaTest {
   void getFemaleNameRunsFast() {
     var nameDbUsa = NameDbUsa.getInstance();
     long start = System.nanoTime();
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 1_000_000; i++) {
       nameDbUsa.getFemaleName();
     }
     long end = System.nanoTime();
@@ -38,7 +38,7 @@ class NameDbUsaTest {
   void getLastNameRunsFast() {
     var nameDbUsa = NameDbUsa.getInstance();
     long start = System.nanoTime();
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 1_000_000; i++) {
       nameDbUsa.getLastName();
     }
     long end = System.nanoTime();
@@ -49,7 +49,7 @@ class NameDbUsaTest {
   void getPersonRunsFast() {
     var nameDbUsa = NameDbUsa.getInstance();
     long start = System.nanoTime();
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 1_000_000; i++) {
       nameDbUsa.getPerson();
     }
     long end = System.nanoTime();
@@ -104,7 +104,7 @@ class NameDbUsaTest {
 
   @Test
   void getPersonWithPositiveNumber() {
-    Person person = nameDbUsa.getPerson(12345L);
+    Person person = nameDbUsa.getPerson(12_345L);
     assertThat(person.firstName()).isEqualTo("JAMES");
     assertThat(person.lastName()).isEqualTo("SMITH");
     assertThat(person.gender()).isEqualTo("M");
@@ -113,7 +113,7 @@ class NameDbUsaTest {
 
   @Test
   void getPersonWithNegativeNumber() {
-    Person person = nameDbUsa.getPerson(-12345L);
+    Person person = nameDbUsa.getPerson(-12_345L);
     assertThat(person.firstName()).isEqualTo("MARY");
     assertThat(person.lastName()).isEqualTo("SMITH");
     assertThat(person.race()).isEqualTo(Race.White);
