@@ -1,8 +1,8 @@
 package com.github.rahulsom.genealogy;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import lombok.*;
 
 /** Represents a Lastname */
 @Getter
@@ -59,56 +59,41 @@ public class LastName extends Name {
     this.percentAlaskanOrNativeAmerican = percentAlaskanOrNativeAmerican;
     this.percentMixedRace = percentMixedRace;
     this.percentHispanic = percentHispanic;
-    double accountedRace = 0;
-    int unaccountedRaces = 0;
-    if (percentWhite == null) {
-      unaccountedRaces++;
-    } else {
-      accountedRace += percentWhite;
-    }
-    if (percentBlack == null) {
-      unaccountedRaces++;
-    } else {
-      accountedRace += percentBlack;
-    }
-    if (percentAsianOrPacificIslander == null) {
-      unaccountedRaces++;
-    } else {
-      accountedRace += percentAsianOrPacificIslander;
-    }
-    if (percentAlaskanOrNativeAmerican == null) {
-      unaccountedRaces++;
-    } else {
-      accountedRace += percentAlaskanOrNativeAmerican;
-    }
-    if (percentMixedRace == null) {
-      unaccountedRaces++;
-    } else {
-      accountedRace += percentMixedRace;
-    }
-    if (percentHispanic == null) {
-      unaccountedRaces++;
-    } else {
-      accountedRace += percentHispanic;
-    }
+    var accountedRace = new AtomicReference<>(0.0d);
+    var unaccountedRaces = new AtomicReference<>(0);
+    accountForRace(percentWhite, unaccountedRaces, accountedRace);
+    accountForRace(percentBlack, unaccountedRaces, accountedRace);
+    accountForRace(percentAsianOrPacificIslander, unaccountedRaces, accountedRace);
+    accountForRace(percentAlaskanOrNativeAmerican, unaccountedRaces, accountedRace);
+    accountForRace(percentMixedRace, unaccountedRaces, accountedRace);
+    accountForRace(percentHispanic, unaccountedRaces, accountedRace);
 
-    if (this.percentWhite == null) {
-      this.percentWhite = (MAX_PROBABILITY - accountedRace) / unaccountedRaces;
-    }
-    if (this.percentBlack == null) {
-      this.percentBlack = (MAX_PROBABILITY - accountedRace) / unaccountedRaces;
-    }
-    if (this.percentAsianOrPacificIslander == null) {
-      this.percentAsianOrPacificIslander = (MAX_PROBABILITY - accountedRace) / unaccountedRaces;
-    }
-    if (this.percentAlaskanOrNativeAmerican == null) {
-      this.percentAlaskanOrNativeAmerican = (MAX_PROBABILITY - accountedRace) / unaccountedRaces;
-    }
-    if (this.percentMixedRace == null) {
-      this.percentMixedRace = (MAX_PROBABILITY - accountedRace) / unaccountedRaces;
-    }
-    if (this.percentHispanic == null) {
-      this.percentHispanic = (MAX_PROBABILITY - accountedRace) / unaccountedRaces;
+    this.percentWhite = updateIfNull(accountedRace, unaccountedRaces, this.percentWhite);
+    this.percentBlack = updateIfNull(accountedRace, unaccountedRaces, this.percentBlack);
+    this.percentAsianOrPacificIslander =
+        updateIfNull(accountedRace, unaccountedRaces, this.percentAsianOrPacificIslander);
+    this.percentAlaskanOrNativeAmerican =
+        updateIfNull(accountedRace, unaccountedRaces, this.percentAlaskanOrNativeAmerican);
+    this.percentMixedRace = updateIfNull(accountedRace, unaccountedRaces, this.percentMixedRace);
+    this.percentHispanic = updateIfNull(accountedRace, unaccountedRaces, this.percentHispanic);
+  }
+
+  private Double updateIfNull(
+      AtomicReference<Double> accountedRace,
+      AtomicReference<Integer> unaccountedRaces,
+      Double percentForRace) {
+    return Optional.ofNullable(percentForRace)
+        .orElseGet(() -> (MAX_PROBABILITY - accountedRace.get()) / unaccountedRaces.get());
+  }
+
+  private static void accountForRace(
+      Double percentForRace,
+      AtomicReference<Integer> unaccountedRaces,
+      AtomicReference<Double> accountedRace) {
+    if (percentForRace == null) {
+      unaccountedRaces.set(unaccountedRaces.get() + 1);
+    } else {
+      accountedRace.set(accountedRace.get() + percentForRace);
     }
   }
 
