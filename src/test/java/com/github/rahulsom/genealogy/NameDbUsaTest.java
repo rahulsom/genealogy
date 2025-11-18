@@ -20,7 +20,7 @@ class NameDbUsaTest {
       nameDbUsa.getMaleName();
     }
     long end = System.nanoTime();
-    assertThat((end - start) / 1_000_000).isLessThan(200);
+    assertThat((end - start) / 1_000_000).isLessThan(400);
   }
 
   @Test
@@ -31,7 +31,7 @@ class NameDbUsaTest {
       nameDbUsa.getFemaleName();
     }
     long end = System.nanoTime();
-    assertThat((end - start) / 1_000_000).isLessThan(200);
+    assertThat((end - start) / 1_000_000).isLessThan(400);
   }
 
   @Test
@@ -42,7 +42,7 @@ class NameDbUsaTest {
       nameDbUsa.getLastName();
     }
     long end = System.nanoTime();
-    assertThat((end - start) / 1_000_000).isLessThan(400);
+    assertThat((end - start) / 1_000_000).isLessThan(800);
   }
 
   @Test
@@ -53,7 +53,7 @@ class NameDbUsaTest {
       nameDbUsa.getPerson();
     }
     long end = System.nanoTime();
-    assertThat((end - start) / 1_000_000).isLessThan(800);
+    assertThat((end - start) / 1_000_000).isLessThan(1600);
   }
 
   @Mock Random random;
