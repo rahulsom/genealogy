@@ -18,8 +18,8 @@ group = "com.github.rahulsom"
 description = "Genealogy"
 
 dependencies {
-  annotationProcessor("org.projectlombok:lombok:1.18.42")
-  compileOnly("org.projectlombok:lombok:1.18.42")
+  annotationProcessor("org.projectlombok:lombok:1.18.44")
+  compileOnly("org.projectlombok:lombok:1.18.44")
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.3")
   testImplementation("org.junit.jupiter:junit-jupiter-params:6.0.3")
