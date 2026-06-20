@@ -5,7 +5,7 @@ import org.gradle.kotlin.dsl.delegateClosureOf
 plugins {
   id("java-library")
   id("com.github.rahulsom.waena.root").version("0.26.0")
-  id("com.github.rahulsom.waena.published").version("0.26.0")
+  id("com.github.rahulsom.waena.published").version("0.28.0")
   id("com.diffplug.spotless").version("8.7.0")
   id("com.adarshr.test-logger").version("4.0.0")
 }
