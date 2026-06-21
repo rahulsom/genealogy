@@ -1,5 +1,3 @@
-import nebula.plugin.contacts.Contact
-import nebula.plugin.contacts.ContactsExtension
 import org.gradle.kotlin.dsl.delegateClosureOf
 
 plugins {
@@ -59,13 +57,10 @@ testlogger {
   theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA
 }
 
-extensions.findByType<ContactsExtension>()?.apply {
-  addPerson(
-    "rahulsom@noreply.github.com",
-    delegateClosureOf<Contact> {
-      moniker("Rahul Somasunderam")
-      roles("owner")
-      github("https://github.com/rahulsom")
-    },
-  )
+contacts {
+  addPerson("rahulsom@noreply.github.com") {
+    moniker("Rahul Somasunderam")
+    roles("owner")
+    github("https://github.com/rahulsom")
+  }
 }
