@@ -4,7 +4,7 @@ plugins {
   id("java-library")
   id("com.github.rahulsom.waena.root").version("0.29.0")
   id("com.github.rahulsom.waena.published").version("0.29.0")
-  id("com.diffplug.spotless").version("8.10.1")
+  id("com.diffplug.spotless").version("8.10.2")
   id("com.adarshr.test-logger").version("4.0.0")
 }
 
